@@ -44,7 +44,7 @@ export default new Promise((resolve) => {
               { from: outputStaticUrl(), to: outputStaticUrl() },
             ],
           },
-          // watchFiles: ['src/**/*'],
+          watchFiles: ['src/**/*'], // 不设置该属性的话，修改src目录的html文件不会触发热更新
 
           static: {
             watch: true, // 告诉 dev-server 监听文件。默认启用，文件更改将触发整个页面重新加载。可以通过将 watch 设置为 false 禁用。

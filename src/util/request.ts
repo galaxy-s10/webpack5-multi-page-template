@@ -1,4 +1,4 @@
-import { zepto } from './zepto';
+import { zepto } from '@/model/zepto';
 
 export const myFetch = ({ type, url, data }) => {
   return new Promise((resolve, reject) => {

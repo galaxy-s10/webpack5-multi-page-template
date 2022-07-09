@@ -1,4 +1,4 @@
-import { zepto } from '@/util/zepto';
+import { zepto } from '@/model/zepto';
 import './index.scss';
 
 const loadingEle = zepto('#loading-wrap');

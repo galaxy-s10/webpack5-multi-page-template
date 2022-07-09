@@ -24,23 +24,10 @@ console.log(
 );
 
 const commonConfig = (isProduction) => {
-  const { entry, plugins } = generatePageConfig();
-  console.log(plugins);
-  // return;
+  const { entry, htmlWebpackPlugins } = generatePageConfig(isProduction);
   const result = {
     // 入口，默认src/index.js
-    // entry,
-    entry: {
-      main: {
-        import: './src/main.ts',
-        // filename: 'output-[name]-bundle.js', //默认情况下，入口 chunk 的输出文件名是从 output.filename 中提取出来的，但你可以为特定的入口指定一个自定义的输出文件名。
-      },
-      // home: {
-      //   import: './src/page/home/home.ts',
-      //   // filename: 'output-[name]-bundle.js', //默认情况下，入口 chunk 的输出文件名是从 output.filename 中提取出来的，但你可以为特定的入口指定一个自定义的输出文件名。
-      // },
-    },
-
+    entry,
     // 输出
     output: {
       path: path.resolve(__dirname, '../dist'),
@@ -186,7 +173,6 @@ const commonConfig = (isProduction) => {
 
                     return content;
                   }
-
                   return result;
                 },
               },
@@ -221,55 +207,7 @@ const commonConfig = (isProduction) => {
           '../node_modules/.cache/.eslintcache'
         ),
       }),
-      // ...plugins,
-      // // 该插件将为您生成一个HTML5文件，其中包含使用脚本标签的所有Webpack捆绑包
-      new HtmlWebpackPlugin({
-        filename: 'index.html',
-        // title: APP_NAME, // 使用html-loader后，htmlWebpackPlugin定义的变量就不管用了。
-        template: './src/page/home/home.html',
-        hash: true,
-        minify: isProduction
-          ? {
-              collapseWhitespace: true, // 折叠空白
-              keepClosingSlash: true, // 在单标签上保留末尾斜杠
-              removeComments: true, // 移除注释
-              removeRedundantAttributes: true, // 移除多余的属性（如：input的type默认就是text，如果写了type="text"，就移除它，因为不写它默认也是type="text"）
-              removeScriptTypeAttributes: true, // 删除script标签中type="text/javascript"
-              removeStyleLinkTypeAttributes: true, // 删除style和link标签中type="text/css"
-              useShortDoctype: true, // 使用html5的<!doctype html>替换掉之前的html老版本声明方式<!doctype>
-              // 上面的都是production模式下默认值。
-              removeEmptyAttributes: true, // 移除一些空属性，如空的id,classs,style等等，但不是空的就全删，比如<img alt />中的alt不会删。http://perfectionkills.com/experimenting-with-html-minifier/#remove_empty_or_blank_attributes
-
-              minifyCSS: true, // 使用clean-css插件删除 CSS 中一些无用的空格、注释等。
-              minifyJS: true, // 使用Terser插件优化
-            }
-          : false,
-        // chunks: ['main'], // 要仅包含某些块，您可以限制正在使用的块
-      }),
-      //
-      // new HtmlWebpackPlugin({
-      //   filename: 'demo.html',
-      //   // title: APP_NAME, // 使用html-loader后，htmlWebpackPlugin定义的变量就不管用了。
-      //   template: './public/demo.html',
-      //   hash: true,
-      //   minify: isProduction
-      //     ? {
-      //         collapseWhitespace: true, // 折叠空白
-      //         keepClosingSlash: true, // 在单标签上保留末尾斜杠
-      //         removeComments: true, // 移除注释
-      //         removeRedundantAttributes: true, // 移除多余的属性（如：input的type默认就是text，如果写了type="text"，就移除它，因为不写它默认也是type="text"）
-      //         removeScriptTypeAttributes: true, // 删除script标签中type="text/javascript"
-      //         removeStyleLinkTypeAttributes: true, // 删除style和link标签中type="text/css"
-      //         useShortDoctype: true, // 使用html5的<!doctype html>替换掉之前的html老版本声明方式<!doctype>
-      //         // 上面的都是production模式下默认值。
-      //         removeEmptyAttributes: true, // 移除一些空属性，如空的id,classs,style等等，但不是空的就全删，比如<img alt />中的alt不会删。http://perfectionkills.com/experimenting-with-html-minifier/#remove_empty_or_blank_attributes
-
-      //         minifyCSS: true, // 使用clean-css插件删除 CSS 中一些无用的空格、注释等。
-      //         minifyJS: true, // 使用Terser插件优化
-      //       }
-      //     : false,
-      //   chunks: ['demo'], // 要仅包含某些块，您可以限制正在使用的块
-      // }),
+      ...htmlWebpackPlugins,
       // 将已存在的单个文件或整个目录复制到构建目录。
       new CopyWebpackPlugin({
         patterns: [
@@ -280,8 +218,7 @@ const commonConfig = (isProduction) => {
               ignore: [
                 // 复制到output.path时，如果output.paht已经存在重复的文件了，会报错：
                 // ERROR in Conflict: Multiple assets emit different content to the same filename md.html
-                '**/index.html', // 忽略from目录下的index.html，它是入口文件
-                '**/demo.html', // 忽略from目录下的demo.html，它是入口文件
+                // '**/index.html', // 忽略from目录下的index.html，它是入口文件
               ],
             },
           },
@@ -292,9 +229,9 @@ const commonConfig = (isProduction) => {
         BASE_URL: `${JSON.stringify(outputStaticUrl())}`, // public下的index.html里面的icon的路径
         'process.env': {
           NODE_ENV: JSON.stringify(isProduction ? 'production' : 'development'),
-          H5_GAME_PROJECT_NAME: JSON.stringify(pkg.name),
-          H5_GAME_PROJECT_VERSION: JSON.stringify(pkg.version),
-          H5_GAME_PROJECT_LASTBUNDLE_TIME: JSON.stringify(
+          MULTI_PAGE_PROJECT_NAME: JSON.stringify(pkg.name),
+          MULTI_PAGE_PROJECT_VERSION: JSON.stringify(pkg.version),
+          MULTI_PAGE_PROJECT_LASTBUNDLE_TIME: JSON.stringify(
             new Date().toLocaleString()
           ),
         },

@@ -2,7 +2,6 @@ import CompressionPlugin from 'compression-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
-import JavaScriptObfuscator from 'webpack-obfuscator';
 
 import { chalkINFO, emoji } from './utils/chalkTip';
 
@@ -96,15 +95,5 @@ export default {
       chunkFilename: 'css/[id].css',
       ignoreOrder: false, // Enable to remove warnings about conflicting order
     }),
-    new JavaScriptObfuscator(
-      {
-        rotateStringArray: true,
-        compact: true, // 压缩代码
-        deadCodeInjection: false, // 混淆代码的大小（最多200％） 此功能将随机的死代码块
-        identifiersPrefix: 'dx', // 需要不同时配置，命名前缀，
-        seed: 3, // 需要不同时配置，默认用0 每次混淆代码时都会得到一个新结果（即：不同的变量名，插入stringArray的不同变量等）。如果需要可重复的结果，请将种子设置为特定的整数。
-      },
-      []
-    ),
   ],
 };

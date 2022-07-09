@@ -6,4 +6,4 @@ startLoading();
 setTimeout(() => {
   endLoading();
 }, 1000);
-console.log(1121);
+console.log('index页面');
