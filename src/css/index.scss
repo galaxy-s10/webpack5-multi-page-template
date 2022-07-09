@@ -1,0 +1,11 @@
+@import './common/index.scss';
+
+#home {
+  color: skyblue;
+}
+.fire-ico {
+  @include setBackground('../img/fire-ico.png');
+  // @include setBackground('/public/img/fire-ico.png');
+  width: 100px;
+  height: 100px;
+}
