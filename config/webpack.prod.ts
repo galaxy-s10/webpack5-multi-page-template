@@ -3,12 +3,9 @@ import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 
-import { chalkINFO, emoji } from './utils/chalkTip';
+import { chalkINFO } from './utils/chalkTip';
 
-console.log(
-  chalkINFO(`读取: ${__filename.slice(__dirname.length + 1)}`),
-  emoji.get('white_check_mark')
-);
+console.log(chalkINFO(`读取: ${__filename.slice(__dirname.length + 1)}`));
 
 export default {
   mode: 'production',
@@ -40,6 +37,14 @@ export default {
           filename: 'js/[name]-[contenthash:6]-default.js',
           minChunks: 2, // 至少被minChunks个入口文件引入了minChunks次。
           priority: -20,
+        },
+        svgaplayerweb: {
+          test: /[\\/]node_modules[\\/](svgaplayerweb)[\\/]/,
+          name: 'svgaplayerweb',
+          chunks: 'all',
+          // maxSize: 50 * 1024, // 设置这个值其实不生效
+          // minSize: 50 * 1024, // 设置这个值其实不生效
+          priority: 10,
         },
       },
     },

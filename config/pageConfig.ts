@@ -1,6 +1,6 @@
 import path from 'path';
 
-export const pages = (isProduction) => {
+export default (isProduction) => {
   const minify = isProduction
     ? {
         collapseWhitespace: true, // 折叠空白

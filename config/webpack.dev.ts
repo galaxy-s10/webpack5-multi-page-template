@@ -2,14 +2,15 @@ import path from 'path';
 
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import portfinder from 'portfinder';
+import WebpackDevServer from 'webpack-dev-server';
 
-import { chalkINFO, emoji } from './utils/chalkTip';
+import ConsoleDebugPlugin from './consoleDebugPlugin';
+import { chalkINFO } from './utils/chalkTip';
 import { outputStaticUrl } from './utils/outputStaticUrl';
 
-console.log(
-  chalkINFO(`读取: ${__filename.slice(__dirname.length + 1)}`),
-  emoji.get('white_check_mark')
-);
+const localIPv4 = WebpackDevServer.internalIPSync('v4');
+
+console.log(chalkINFO(`读取: ${__filename.slice(__dirname.length + 1)}`));
 
 export default new Promise((resolve) => {
   // 默认端口8000，如果被占用了，会自动递增+1
@@ -25,6 +26,10 @@ export default new Promise((resolve) => {
         mode: 'development',
         devtool: 'source-map',
         stats: 'errors-warnings', // 只显示警告和错误信息（webpack-dev-server4.x后变了）
+        // 这个infrastructureLogging设置参考了vuecli5，如果不设置，webpack-dev-server会打印一些信息
+        infrastructureLogging: {
+          level: 'none',
+        },
         devServer: {
           client: {
             logging: 'none', // https://webpack.js.org/configuration/dev-server/#devserverclient
@@ -38,17 +43,17 @@ export default new Promise((resolve) => {
           historyApiFallback: {
             rewrites: [
               /**
-               * 如果publicPath设置了/abc，就不能直接设置historyApiFallback: true，这样会重定向到vue3-blog-admin根目录下的index.html
+               * 如果publicPath设置了/abc，就不能直接设置historyApiFallback: true，这样会重定向到根目录下的index.html
                * publicPath设置了/abc，就重定向到/abc，这样就可以了
                */
-              { from: outputStaticUrl(), to: outputStaticUrl() },
+              { from: outputStaticUrl(false), to: outputStaticUrl(false) },
             ],
           },
           watchFiles: ['src/**/*'], // 不设置该属性的话，修改src目录的html文件不会触发热更新
 
           static: {
             watch: true, // 告诉 dev-server 监听文件。默认启用，文件更改将触发整个页面重新加载。可以通过将 watch 设置为 false 禁用。
-            publicPath: outputStaticUrl(),
+            publicPath: outputStaticUrl(false),
             directory: path.resolve(__dirname, '../public'),
             // directory: path.resolve(__dirname, '../src'),
           },
@@ -112,6 +117,11 @@ export default new Promise((resolve) => {
              * async 默认为 true，异步的将错误信息反馈给 webpack，如果报错了，不影响 webpack 的编译
              */
             async: true,
+          }),
+          // 打印控制调试地址
+          new ConsoleDebugPlugin({
+            local: `http://localhost:${port}`,
+            network: `http://${localIPv4}:${port}`,
           }),
         ],
       });

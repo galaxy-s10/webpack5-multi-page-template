@@ -1,7 +1,7 @@
 import { startLoading, endLoading } from '@/component/loading';
-import { showVersion } from '@/model/showVersion';
+import showProjectInfo from '@/model/showProjectInfo';
 import '@/css/index.scss';
-showVersion();
+showProjectInfo();
 startLoading();
 setTimeout(() => {
   endLoading();

@@ -1,17 +1,17 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
-import { pages } from '../pageConfig';
+import pages from '../pageConfig';
 
-export const generatePageConfig = (isProduction: boolean) => {
-  let entry = {};
-  let htmlWebpackPlugins: any[] = [];
+export default (isProduction: boolean) => {
+  const entry = {};
+  const htmlWebpackPlugins: any[] = [];
   pages(isProduction).forEach((item) => {
-    let name = item.name;
+    const name = item.name;
     entry[name] = item.entry;
 
     htmlWebpackPlugins.push(
       new HtmlWebpackPlugin({
-        filename: name + '.html',
+        filename: `${name}.html`,
         template: item.template,
         hash: item.hash,
         minify: item.minify,
