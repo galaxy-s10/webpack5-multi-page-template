@@ -12,6 +12,7 @@ export default (isProduction: boolean) => {
     htmlWebpackPlugins.push(
       new HtmlWebpackPlugin({
         filename: `${name}.html`,
+        publicPath: './',
         template: item.template,
         hash: item.hash,
         minify: item.minify,

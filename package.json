@@ -1,31 +1,28 @@
 {
   "name": "webpack-multi-page-template",
-  "version": "0.0.0",
-  "license": "MIT",
+  "version": "0.0.1",
   "repository": {
+    "type": "git",
     "url": "https://github.com/galaxy-s10/webpack-multi-page-template"
   },
+  "license": "MIT",
   "author": "shuisheng <2274751790@qq.com>",
   "scripts": {
-    "build": "webpack --config ./config/webpack.common.ts --env production",
-    "commit": "cz",
+    "build": "webpack --config ./script/config/webpack.common.ts --env production",
     "cz": "cz",
     "lint": "eslint --config ./.eslintrc.js . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint --config ./.eslintrc.js . --ext .js,.jsx,.ts,.tsx --fix",
     "prepare": "husky install",
     "prettier": "prettier --write .",
     "release": "standard-version",
-    "start": "cross-env webpack serve --config ./config/webpack.common.ts --env development"
+    "start": "cross-env webpack serve --config ./script/config/webpack.common.ts --env development"
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "dependencies": {
-    "@types/zepto": "^1.0.32",
-    "chalk": "^4"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.14.0",
     "@babel/preset-env": "^7.14.2",
@@ -33,9 +30,11 @@
     "@commitlint/config-conventional": "^16.0.0",
     "@rushstack/eslint-patch": "^1.1.0",
     "@soda/friendly-errors-webpack-plugin": "^1.8.1",
+    "@types/zepto": "^1.0.32",
     "@typescript-eslint/eslint-plugin": "^5.30.5",
     "@typescript-eslint/parser": "^5.8.1",
     "babel-loader": "^8.2.2",
+    "chalk": "^4",
     "commitizen": "^4.2.4",
     "compression-webpack-plugin": "^9.2.0",
     "copy-webpack-plugin": "^10.2.4",
@@ -49,12 +48,12 @@
     "eslint-webpack-plugin": "^3.1.1",
     "file-loader": "^6.2.0",
     "fork-ts-checker-webpack-plugin": "^7.2.6",
+    "handlebars": "^4.7.7",
     "html-loader": "^3.1.2",
     "html-webpack-plugin": "^5.3.1",
     "husky": "^7.0.0",
     "lint-staged": "^12.1.4",
     "mini-css-extract-plugin": "^2.6.0",
-    "node-emoji": "^1.11.0",
     "portfinder": "^1.0.28",
     "postcss": "^8.4.8",
     "postcss-loader": "^6.2.1",
@@ -69,6 +68,7 @@
     "terser-webpack-plugin": "^5.3.3",
     "thread-loader": "^3.0.4",
     "ts-loader": "^9.2.7",
+    "ts-node": "^10.9.1",
     "typescript": "^4.6.2",
     "webpack": "^5.68.0",
     "webpack-bundle-analyzer": "^4.4.1",

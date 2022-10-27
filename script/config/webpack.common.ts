@@ -1,6 +1,3 @@
-import { execSync } from 'child_process';
-import path from 'path';
-
 import FriendlyErrorsWebpackPlugin from '@soda/friendly-errors-webpack-plugin';
 // eslint-disable-next-line
 import CopyWebpackPlugin from 'copy-webpack-plugin';
@@ -10,33 +7,15 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { DefinePlugin } from 'webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { merge } from 'webpack-merge';
-import WebpackBar from 'webpackbar';
 
-import pkg from '../package.json';
-import { chalkINFO, chalkWRAN } from './utils/chalkTip';
-import generatePageConfig from './utils/handlePage';
-import { outputStaticUrl } from './utils/outputStaticUrl';
+import pkg from '../../package.json';
+import InjectProjectInfoPlugin from '../InjectProjectInfoPlugin';
+import { eslintEnable, outputDir, outputStaticUrl } from '../constant';
+import { chalkINFO, chalkWARN } from '../utils/chalkTip';
+import generatePageConfig from '../utils/handlePage';
+import { resolveApp } from '../utils/path';
 import devConfig from './webpack.dev';
 import prodConfig from './webpack.prod';
-
-let commitHash;
-let commitUserName;
-let commitDate;
-let commitMessage;
-try {
-  // commit哈希
-  commitHash = execSync('git show -s --format=%H').toString().trim();
-  // commit用户名
-  commitUserName = execSync('git show -s --format=%cn').toString().trim();
-  // commit日期
-  commitDate = new Date(
-    execSync(`git show -s --format=%cd`).toString()
-  ).toLocaleString();
-  // commit消息
-  commitMessage = execSync('git show -s --format=%s').toString().trim();
-} catch (error) {
-  console.log(error);
-}
 
 console.log(chalkINFO(`读取: ${__filename.slice(__dirname.length + 1)}`));
 
@@ -47,7 +26,8 @@ const commonConfig = (isProduction) => {
     entry,
     // 输出
     output: {
-      path: path.resolve(__dirname, '../dist'),
+      filename: '[name].bundle.js',
+      path: resolveApp(`./${outputDir}`),
       publicPath: outputStaticUrl(isProduction),
     },
     resolve: {
@@ -55,7 +35,7 @@ const commonConfig = (isProduction) => {
       extensions: ['.js', '.jsx', '.ts', '.tsx'], // 解析扩展名
       alias: {
         // 如果不设置这个alias，webpack就会解析不到import xxx '@/xxx'中的@
-        '@': path.resolve(__dirname, '../src'), // 设置路径别名
+        '@': resolveApp('./src'), // 设置路径别名
       },
     },
     resolveLoader: {
@@ -78,7 +58,6 @@ const commonConfig = (isProduction) => {
           test: /\.jsx?$/,
           exclude: /node_modules/,
           use: [
-            'thread-loader',
             {
               loader: 'babel-loader',
               options: {
@@ -123,7 +102,9 @@ const commonConfig = (isProduction) => {
                     publicPath: '../',
                   },
                 }
-              : { loader: 'style-loader' }, // Do not use style-loader and mini-css-extract-plugin together.
+              : {
+                  loader: 'style-loader',
+                }, // Do not use style-loader and mini-css-extract-plugin together.
             {
               loader: 'css-loader',
               options: {
@@ -144,7 +125,9 @@ const commonConfig = (isProduction) => {
                     publicPath: '../',
                   },
                 }
-              : { loader: 'style-loader' },
+              : {
+                  loader: 'style-loader',
+                },
             {
               loader: 'css-loader',
               options: {
@@ -152,7 +135,14 @@ const commonConfig = (isProduction) => {
               },
             },
             'postcss-loader', // 默认会自动找postcss.config.js
-            { loader: 'sass-loader' },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: false,
+                // https://github.com/vercel/next.js/discussions/19042
+                // additionalData: `@import '~@/css/index.scss';`, // 根据sass-loader版本选择additionalData和prependData
+              },
+            },
           ].filter(Boolean),
           sideEffects: true,
         },
@@ -174,7 +164,7 @@ const commonConfig = (isProduction) => {
             {
               loader: 'html-loader',
               options: {
-                minimize: true,
+                minimize: isProduction ? true : false,
                 // 使用html-loader后，htmlWebpackPlugin定义的变量就不管用了。
                 preprocessor: (content, loaderContext) => {
                   let res;
@@ -205,23 +195,19 @@ const commonConfig = (isProduction) => {
       ],
     },
     plugins: [
-      // 构建进度条
-      new WebpackBar(),
       // 友好的显示错误信息在终端
       new FriendlyErrorsWebpackPlugin(),
       // eslint
-      new ESLintPlugin({
-        extensions: ['js', 'jsx', 'ts', 'tsx'],
-        emitError: false, // 发现的错误将始终发出，禁用设置为false.
-        emitWarning: false, // 找到的警告将始终发出，禁用设置为false.
-        failOnError: false, // 如果有任何错误，将导致模块构建失败，禁用设置为false
-        failOnWarning: false, // 如果有任何警告，将导致模块构建失败，禁用设置为false
-        cache: true,
-        cacheLocation: path.resolve(
-          __dirname,
-          '../node_modules/.cache/.eslintcache'
-        ),
-      }),
+      eslintEnable &&
+        new ESLintPlugin({
+          extensions: ['js', 'jsx', 'ts', 'tsx'],
+          emitError: false, // 发现的错误将始终发出，禁用设置为false.
+          emitWarning: false, // 找到的警告将始终发出，禁用设置为false.
+          failOnError: false, // 如果有任何错误，将导致模块构建失败，禁用设置为false
+          failOnWarning: false, // 如果有任何警告，将导致模块构建失败，禁用设置为false
+          cache: true,
+          cacheLocation: resolveApp('./node_modules/.cache/.eslintcache'),
+        }),
       // 将已存在的单个文件或整个目录复制到构建目录。
       new CopyWebpackPlugin({
         patterns: [
@@ -241,24 +227,24 @@ const commonConfig = (isProduction) => {
       // 定义全局变量
       new DefinePlugin({
         BASE_URL: `${JSON.stringify(outputStaticUrl(isProduction))}`, // public下的index.html里面的icon的路径
-        // 这个process.env全局变量只能在项目里面用，和node环境的process.env不是同一个东西
         'process.env': {
           NODE_ENV: JSON.stringify(isProduction ? 'production' : 'development'),
-          H5_GAME_PROJECT_NAME: JSON.stringify(pkg.name),
-          H5_GAME_PROJECT_VERSION: JSON.stringify(pkg.version),
-          H5_GAME_PROJECT_LASTBUNDLE_TIME: JSON.stringify(
-            new Date().toLocaleString()
+          PUBLIC_PATH: JSON.stringify(outputStaticUrl(isProduction)),
+          VUE_APP_RELEASE_PROJECT_NAME: JSON.stringify(
+            process.env.VUE_APP_RELEASE_PROJECT_NAME
           ),
-          H5_GAME_PROJECT_GIT: JSON.stringify({
-            commitHash,
-            commitDate,
-            commitUserName,
-            commitMessage,
-          }),
+          VUE_APP_RELEASE_PROJECT_ENV: JSON.stringify(
+            process.env.VUE_APP_RELEASE_PROJECT_ENV
+          ),
         },
       }),
       // 多页面配置
       ...htmlWebpackPlugins,
+      // new HtmlWebpackInlineSourcePlugin(),
+      // 注入项目信息
+      new InjectProjectInfoPlugin({
+        isProduction,
+      }),
       // bundle分析
       process.env.WEBPACK_ANALYZER_SWITCH &&
         new BundleAnalyzerPlugin({
@@ -275,37 +261,24 @@ const commonConfig = (isProduction) => {
 export default (env) => {
   return new Promise((resolve) => {
     const isProduction = env.production;
-    /**
-     * 注意：在node环境下，给process.env这个对象添加的所有属性，都会默认转成字符串,
-     * 如果给process.env.NODE_ENV = undefined，赋值的时候node会将undefined转成"undefined"再赋值
-     * 即约等于：process.env.NODE_ENV = "undefined",
-     * 如果是process.env.num = 123，最终就是：process.env.num = "123"。
-     * 所以，尽量不要将非字符串赋值给process.env[属性名]！
-     */
-    // 如果是process.env.production = isProduction，这样的话，process.env.production就要么是字符串"true"，要么是字符串"undefined"
-    // 改进：process.env.production = isProduction?true:false,这样的话，process.env.production就要么是字符串"true"，要么是字符串"false"
-    // 这里要先判断isProduction，判断完再将字符串赋值给process.env.NODE_ENV，就万无一失了
     process.env.NODE_ENV = isProduction ? 'production' : 'development';
-    /**
-     * 因为outputStaticUrl.ts这个文件用到了process.env，
-     * 而outputStaticUrl.ts它不仅在yarn start的时候用到了，而且在yarn build的时候也用到了，
-     * 因此得确保process.env它在node环境里面（在执行webpack的时候直接添加值）和开发环境（webpack.DefinePlugin注入）都有
-     */
-    process.env.H5_GAME_PROJECT_NAME = pkg.name;
-    process.env.H5_GAME_PROJECT_VERSION = pkg.version;
-    process.env.H5_GAME_PROJECT_LASTBUNDLE_TIME = new Date().toLocaleString();
-    // prodConfig返回的是普通对象，devConfig返回的是promise，使用Promise.resolve进行包装
     const configPromise = Promise.resolve(
       isProduction ? prodConfig : devConfig
     );
-    configPromise.then((config: any) => {
-      console.log(
-        chalkWRAN(
-          `根据当前环境，合并配置文件，当前是: ${process.env.NODE_ENV}环境`
-        )
-      );
-      const mergeConfig = merge(commonConfig(isProduction), config);
-      resolve(mergeConfig);
-    });
+    configPromise.then(
+      (config: any) => {
+        // 根据当前环境，合并配置文件
+        const mergeConfig = merge(commonConfig(isProduction), config);
+        console.log(
+          chalkWARN(
+            `根据当前环境，合并配置文件，当前是: ${process.env.NODE_ENV!}环境`
+          )
+        );
+        resolve(mergeConfig);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   });
 };

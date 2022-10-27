@@ -25,5 +25,5 @@
       "module": "CommonJS"
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "config/**/*.ts"] // 仅仅匹配这些文件，除了src以外的文件都不会被匹配
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "script/**/*.ts"] // 仅仅匹配这些文件，除了src以外的文件都不会被匹配
 }

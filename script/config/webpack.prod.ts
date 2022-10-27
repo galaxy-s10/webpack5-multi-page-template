@@ -2,8 +2,9 @@ import CompressionPlugin from 'compression-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
+import WebpackBar from 'webpackbar';
 
-import { chalkINFO } from './utils/chalkTip';
+import { chalkINFO } from '../utils/chalkTip';
 
 console.log(chalkINFO(`读取: ${__filename.slice(__dirname.length + 1)}`));
 
@@ -37,14 +38,6 @@ export default {
           filename: 'js/[name]-[contenthash:6]-default.js',
           minChunks: 2, // 至少被minChunks个入口文件引入了minChunks次。
           priority: -20,
-        },
-        svgaplayerweb: {
-          test: /[\\/]node_modules[\\/](svgaplayerweb)[\\/]/,
-          name: 'svgaplayerweb',
-          chunks: 'all',
-          // maxSize: 50 * 1024, // 设置这个值其实不生效
-          // minSize: 50 * 1024, // 设置这个值其实不生效
-          priority: 10,
         },
       },
     },
@@ -83,13 +76,15 @@ export default {
     ],
   },
   plugins: [
+    // 构建进度条
+    new WebpackBar(),
     // http压缩
-    new CompressionPlugin({
-      test: /\.(css|js)$/i,
-      threshold: 10 * 1024, // 大于10k的文件才进行压缩
-      minRatio: 0.8, // 只有压缩比这个比率更好的资产才会被处理(minRatio =压缩大小/原始大小),即压缩如果达不到0.8就不会进行压缩
-      algorithm: 'gzip', // 压缩算法
-    }),
+    // new CompressionPlugin({
+    //   test: /\.(css|js)$/i,
+    //   threshold: 10 * 1024, // 大于10k的文件才进行压缩
+    //   minRatio: 0.8, // 只有压缩比这个比率更好的资产才会被处理(minRatio =压缩大小/原始大小),即压缩如果达不到0.8就不会进行压缩
+    //   algorithm: 'gzip', // 压缩算法
+    // }),
     // 将 CSS 提取到单独的文件中
     new MiniCssExtractPlugin({
       /**

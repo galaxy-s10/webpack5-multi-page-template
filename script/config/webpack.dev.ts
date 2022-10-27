@@ -1,12 +1,12 @@
-import path from 'path';
-
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import portfinder from 'portfinder';
 import WebpackDevServer from 'webpack-dev-server';
+import WebpackBar from 'webpackbar';
 
-import ConsoleDebugPlugin from './consoleDebugPlugin';
-import { chalkINFO } from './utils/chalkTip';
-import { outputStaticUrl } from './utils/outputStaticUrl';
+import TerminalPrintPlugin from '../TerminalPrintPlugin';
+import { webpackBarEnable, outputStaticUrl } from '../constant';
+import { chalkINFO } from '../utils/chalkTip';
+import { resolveApp } from '../utils/path';
 
 const localIPv4 = WebpackDevServer.internalIPSync('v4');
 
@@ -24,7 +24,7 @@ export default new Promise((resolve) => {
       resolve({
         target: 'web',
         mode: 'development',
-        devtool: 'source-map',
+        devtool: 'eval', // eval，具有最高性能的开发构建的推荐选择。
         stats: 'errors-warnings', // 只显示警告和错误信息（webpack-dev-server4.x后变了）
         // 这个infrastructureLogging设置参考了vuecli5，如果不设置，webpack-dev-server会打印一些信息
         infrastructureLogging: {
@@ -51,11 +51,15 @@ export default new Promise((resolve) => {
           },
           watchFiles: ['src/**/*'], // 不设置该属性的话，修改src目录的html文件不会触发热更新
 
+          /**
+           * devServer.static提供静态文件服务器，默认是 'public' 文件夹。static: false禁用
+           * 即访问localhost:8080/a.js，其实访问的是public目录的a.js
+           */
+          // WARN 因为CopyWebpackPlugin插件会复制public的文件，所以static: false后再访问localhost:8080/a.js，其实还是能访问到public目录的a.js
           static: {
             watch: true, // 告诉 dev-server 监听文件。默认启用，文件更改将触发整个页面重新加载。可以通过将 watch 设置为 false 禁用。
-            publicPath: outputStaticUrl(false),
-            directory: path.resolve(__dirname, '../public'),
-            // directory: path.resolve(__dirname, '../src'),
+            publicPath: outputStaticUrl(false), // 让它和输入的静态目录对应
+            directory: resolveApp('./public/'),
           },
           proxy: {
             '/api': {
@@ -103,6 +107,8 @@ export default new Promise((resolve) => {
           },
         },
         plugins: [
+          // 构建进度条
+          webpackBarEnable && new WebpackBar(),
           new ForkTsCheckerWebpackPlugin({
             /**
              * devServer如果设置为false，则不会向 Webpack Dev Server 报告错误。
@@ -119,11 +125,11 @@ export default new Promise((resolve) => {
             async: true,
           }),
           // 打印控制调试地址
-          new ConsoleDebugPlugin({
+          new TerminalPrintPlugin({
             local: `http://localhost:${port}`,
             network: `http://${localIPv4}:${port}`,
           }),
-        ],
+        ].filter(Boolean),
       });
     })
     .catch((error) => {
