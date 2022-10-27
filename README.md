@@ -31,38 +31,106 @@ config/pageConfig.ts：
 },
 ```
 
-## 安装依赖
+# 安装依赖
 
 ```sh
-yarn install
+pnpm install
 ```
 
-## 项目启动
-
-> 默认端口 8000，如果 8000 端口被占用了，会自动递增+1
+# 项目启动
 
 ```sh
-yarn start
+pnpm run start
 ```
 
-## 项目打包
+# 项目打包
+
+最终打包生成的目录：`dist`
 
 > 注意：如果你希望打包的 js、css 兼容不同浏览器等，请修改对应的: postcss.config.js、babel.config.js、.browserslistrc 文件！
 
 ```sh
-yarn build
+pnpm run build
 ```
 
-## 提交代码
+# 内联打包
+
+将外部js和css都注入到html里面，最终打包生成的目录：`inlineDist`
 
 ```sh
-yarn cz
+pnpm run gulp:replace
 ```
 
-## 更新版本
+# 提交代码
 
 ```sh
-yarn release
+pnpm run cz
+```
+
+# 更新版本
+
+```sh
+pnpm run release
 # 更新指定版本号
-yarn release -- --release-as 1.0.0
+pnpm run release -- --release-as 1.0.0
 ```
+
+# 注意点
+
+a.js：
+
+```js
+console.log(document.getElementById('app'), 'aaa');
+```
+
+b.js:
+
+```js
+console.log(document.getElementById('app'), 'bbb');
+```
+
+a.html：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="X-UA-Compatible"
+      content="IE=edge"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Document</title>
+
+    <script>
+      console.log(document.getElementById('app')); //null
+    </script>
+
+    <script defer>
+      console.log(document.getElementById('app')); //null
+    </script>
+
+    <!-- b.js打印：null 'bbb' -->
+    <script src="b.js"></script>
+
+    <!-- a.js打印：<div id="app"></div> 'aaa' -->
+    <script
+      defer
+      src="a.js"
+    ></script>
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+</html>
+```
+
+从结果看出，script 只有加上了 defer 标识以及使用了 src 链接外部 js，才是会异步的执行。一般的客户端渲染比如 vue，官方的 vuecli 的做法是将所有脚本加上 defer 标识然后挂载到 head 标签里的，这种行为其实对于客户端渲染来说没问题，因为都是延迟执行，放 head 标签的话还可以尽快解析然后尽快的加载。
+
+但是如果我们的没有使用 vue 之类的客户端渲染框架，而是使用原生 js 写的一些很小的项目，我们就希望我们的我们的 html 页面包含所有样式和脚本，因为项目足够小，将所有样式和脚本放 html 里面，只要加载一个 html 页面，就能显示完整的内容，而不需要额外的通过 link 和 script 标签请求外部的样式和脚本，因为项目小，可能拆出去的脚本和样式就几 k，那么还不如将他们直接塞入到 html 页面里面，这样还能减少网络请求。
+
+> 将**html-webpack-plugin** 插件的 inject 的值设置为 body，否则默认是将script注入到head里面的

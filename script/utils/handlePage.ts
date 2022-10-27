@@ -11,6 +11,7 @@ export default (isProduction: boolean) => {
 
     htmlWebpackPlugins.push(
       new HtmlWebpackPlugin({
+        inject: 'body',
         filename: `${name}.html`,
         publicPath: './',
         template: item.template,

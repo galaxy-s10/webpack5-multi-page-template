@@ -10,6 +10,7 @@
   "scripts": {
     "build": "webpack --config ./script/config/webpack.common.ts --env production",
     "cz": "cz",
+    "gulp:replace": "npm run build && gulp -f ./gulpfile.js",
     "lint": "eslint --config ./.eslintrc.js . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint --config ./.eslintrc.js . --ext .js,.jsx,.ts,.tsx --fix",
     "prepare": "husky install",
@@ -25,6 +26,10 @@
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.14.0",
+    "del": "^6",
+    "gulp": "^4.0.2",
+    "gulp-inline-source": "^4.0.0",
+    "gulp-replace": "^1.1.3",
     "@babel/preset-env": "^7.14.2",
     "@commitlint/cli": "^16.0.1",
     "@commitlint/config-conventional": "^16.0.0",
