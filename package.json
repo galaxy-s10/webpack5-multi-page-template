@@ -10,7 +10,7 @@
   "scripts": {
     "build": "webpack --config ./script/config/webpack.common.ts --env production",
     "cz": "cz",
-    "gulp:replace": "npm run build && gulp -f ./gulpfile.js",
+    "gulp:replace": "npm run build && gulp -f ./script/gulpfile.js",
     "lint": "eslint --config ./.eslintrc.js . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint --config ./.eslintrc.js . --ext .js,.jsx,.ts,.tsx --fix",
     "prepare": "husky install",
