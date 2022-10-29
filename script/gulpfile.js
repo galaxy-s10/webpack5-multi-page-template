@@ -1,3 +1,6 @@
+const path = require('path');
+const process = require('process');
+
 const del = require('del');
 const gulp = require('gulp');
 const inlinesource = require('gulp-inline-source');
@@ -6,6 +9,10 @@ const replace = require('gulp-replace');
 gulp.task(
   'default',
   gulp.series(
+    function changeChdir(done) {
+      process.chdir(path.resolve(__filename, '../../'));
+      done();
+    },
     function removeOld() {
       return del(['./inlineDist/']);
     },
