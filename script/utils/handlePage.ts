@@ -1,5 +1,6 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
+import { outputStaticUrl } from '../constant';
 import pages from '../pageConfig';
 
 export default (isProduction: boolean) => {
@@ -13,7 +14,8 @@ export default (isProduction: boolean) => {
       new HtmlWebpackPlugin({
         inject: 'body',
         filename: `${name}.html`,
-        publicPath: './',
+        publicPath: outputStaticUrl(true),
+        // publicPath: './',
         template: item.template,
         hash: item.hash,
         minify: item.minify,

@@ -99,7 +99,7 @@ const commonConfig = (isProduction) => {
                      * 即默认打包的css文件是webpackOptions.output的publicPath，
                      * 但在new MiniCssExtractPlugin()时候，设置了打包生成的文件在dist下面的css目录里，
                      */
-                    publicPath: '../',
+                    publicPath: outputStaticUrl(isProduction),
                   },
                 }
               : {
@@ -122,7 +122,12 @@ const commonConfig = (isProduction) => {
               ? {
                   loader: MiniCssExtractPlugin.loader,
                   options: {
-                    publicPath: '../',
+                    /**
+                     * you can specify a publicPath here, by default it uses publicPath in webpackOptions.output
+                     * 即默认打包的css文件是webpackOptions.output的publicPath，
+                     * 但在new MiniCssExtractPlugin()时候，设置了打包生成的文件在dist下面的css目录里，
+                     */
+                    publicPath: outputStaticUrl(isProduction),
                   },
                 }
               : {
