@@ -1,0 +1,27 @@
+%maskBg {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba($color: #000000, $alpha: 0.5);
+}
+
+#toast-modal {
+  z-index: 10;
+  background-color: rgba($color: #000000, $alpha: 0);
+
+  @extend %maskBg;
+  .container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 6px 6px rgba(0, 0, 0, 0.08);
+    color: white;
+    text-align: center;
+    transform: translate(-50%, -50%);
+  }
+}

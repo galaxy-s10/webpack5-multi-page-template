@@ -1,11 +1,42 @@
-import { zepto } from '@/model/zepto';
 import './index.scss';
 
-const loadingEle = zepto('#loading-wrap');
+let loadingEle: HTMLElement | null = null;
+let containerEle: HTMLElement | null = null;
 
-// 默认loading的颜色是skyblue
-export const setLoadingColor = (color = 'skyblue') =>
-  loadingEle.css('--color', color);
+interface IConfig {
+  /** loading颜色,默认:skyblue */
+  color?: string;
+  /** loading期间是否能点击,默认:false,不能点击 */
+  allowClick?: boolean;
+}
 
-export const startLoading = () => loadingEle.css('display', 'block');
-export const endLoading = () => loadingEle.css('display', 'none');
+let config: IConfig = { color: 'skyblue', allowClick: false };
+
+export const initLoading = (initConfig?: IConfig) => {
+  config = Object.assign(config, initConfig);
+  loadingEle = document.createElement('div');
+  loadingEle.id = 'loading-modal';
+  loadingEle.setAttribute('style', `--color:${config?.color}`);
+  loadingEle.style.display = 'none';
+  loadingEle.style.pointerEvents = config?.allowClick ? 'none' : 'auto';
+  containerEle = document.createElement('div');
+  containerEle.className = 'container';
+  loadingEle.appendChild(containerEle);
+  document.body.appendChild(loadingEle);
+};
+
+export const startLoading = () => {
+  if (!containerEle || !loadingEle) {
+    console.error('please initLoading');
+    return;
+  }
+  loadingEle.style.display = 'block';
+};
+
+export const endLoading = () => {
+  if (!containerEle || !loadingEle) {
+    console.error('please initLoading');
+    return;
+  }
+  loadingEle.style.display = 'none';
+};

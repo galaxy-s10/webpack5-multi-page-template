@@ -55,7 +55,7 @@ pnpm run build
 
 # 内联打包
 
-将外部js和css都注入到html里面，最终打包生成的目录：`inlineDist`
+将外部 js 和 css 都注入到 html 里面，最终打包生成的目录：`inlineDist`
 
 ```sh
 pnpm run gulp:replace
@@ -133,4 +133,4 @@ a.html：
 
 但是如果我们的没有使用 vue 之类的客户端渲染框架，而是使用原生 js 写的一些很小的项目，我们就希望我们的我们的 html 页面包含所有样式和脚本，因为项目足够小，将所有样式和脚本放 html 里面，只要加载一个 html 页面，就能显示完整的内容，而不需要额外的通过 link 和 script 标签请求外部的样式和脚本，因为项目小，可能拆出去的脚本和样式就几 k，那么还不如将他们直接塞入到 html 页面里面，这样还能减少网络请求。
 
-> 将**html-webpack-plugin** 插件的 inject 的值设置为 body，否则默认是将script注入到head里面的
+> 将**html-webpack-plugin** 插件的 inject 的值设置为 body，否则默认是将 script 注入到 head 里面的

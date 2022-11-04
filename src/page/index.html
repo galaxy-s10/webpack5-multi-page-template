@@ -17,9 +17,9 @@
       href="{{BASE_URL}}favicon.ico"
     />
 
-    <!-- 会引入静态资源目录（public）的zepto.min.js -->
+    <!-- 引入静态资源目录（public）的zepto.min.js -->
     <!-- webpackIgnore: true -->
-    <script src="/zepto.min.js"></script>
+    <script src="{{BASE_URL}}zepto.min.js"></script>
     <title>{{title}}</title>
   </head>
   <body>
@@ -34,12 +34,8 @@
     />
 
     <!-- 这个图片会被当做模块进行打包 -->
-    <img src="../img/earth.png" />
+    <img src="../assets/img/earth.png" />
 
     <div class="fire-ico"></div>
-
-    <div id="loading-wrap">
-      <div class="loading"></div>
-    </div>
   </body>
 </html>

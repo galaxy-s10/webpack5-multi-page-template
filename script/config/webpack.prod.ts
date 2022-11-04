@@ -92,7 +92,7 @@ export default {
        * all options are optional
        */
       filename: 'css/[name]-[contenthash:6].css',
-      chunkFilename: 'css/[id].css',
+      chunkFilename: 'css/[id]-[contenthash:6].css',
       ignoreOrder: false, // Enable to remove warnings about conflicting order
     }),
   ],

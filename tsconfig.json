@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext", // esnext,commonjs
+    "target": "ES5",
+    // "target": "ESNext",
+    "module": "ESNext", // ESNext,commonjs
     "strict": true,
     "noImplicitAny": false,
-    "lib": ["DOM", "esnext"],
+    "lib": ["DOM", "ESNext"],
     "jsx": "preserve",
     "moduleResolution": "node",
     "esModuleInterop": true, // ES 模块互操作,import React from 'react';react是module.exports导出的，因此需要设置该属性

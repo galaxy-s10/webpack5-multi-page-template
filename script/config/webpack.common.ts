@@ -82,6 +82,7 @@ const commonConfig = (isProduction) => {
               loader: 'ts-loader',
               options: {
                 // If you want to speed up compilation significantly you can set this flag. https://www.npmjs.com/package/ts-loader#transpileonly
+                // 仅转译，设置这个之后，tsconfig.json的target其实就不管用了，因为它不会输出东西，只是将ts转译成js
                 transpileOnly: true,
               },
             },
@@ -144,8 +145,8 @@ const commonConfig = (isProduction) => {
               loader: 'sass-loader',
               options: {
                 sourceMap: false,
-                // https://github.com/vercel/next.js/discussions/19042
-                // additionalData: `@import '~@/css/index.scss';`, // 根据sass-loader版本选择additionalData和prependData
+                // 根据sass-loader9.x以后使用additionalData，9.x以前使用prependData
+                additionalData: `@use '~@/assets/css/global/global.scss';`,
               },
             },
           ].filter(Boolean),

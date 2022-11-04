@@ -126,8 +126,8 @@ export default new Promise((resolve) => {
           }),
           // 打印控制调试地址
           new TerminalPrintPlugin({
-            local: `http://localhost:${port}`,
-            network: `http://${localIPv4}:${port}`,
+            local: `http://localhost:${port}${outputStaticUrl(false)}`,
+            network: `http://${localIPv4}:${port}${outputStaticUrl(false)}`,
           }),
         ].filter(Boolean),
       });

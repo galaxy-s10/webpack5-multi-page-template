@@ -37,7 +37,6 @@ var log = (title, value) => {
 log('项目名称：', {pkgName});
 log('项目版本：', {pkgVersion});
 log('项目仓库：', {pkgRepository});
-log('构建仓库：', {buildRepository});
 log('最后构建：', {lastBuild});
 log('构建仓库git提交用户：', {commitUserName});
 log('构建仓库git提交日期：', {commitDate});
@@ -75,14 +74,10 @@ class InjectProjectInfoPlugin {
         'InjectProjectInfoPlugin',
         (data, cb) => {
           // 获取原来内容
-          const buildRepository = this.options.isProduction
-            ? `https://gitee.com/galaxy-s10/${pkgName}`
-            : pkgRepository;
           const info = replaceKeyFromValue(templateStr.toString(), {
             pkgName: JSON.stringify(pkgName),
             pkgVersion: JSON.stringify(pkgVersion),
             pkgRepository: JSON.stringify(pkgRepository),
-            buildRepository: JSON.stringify(buildRepository),
             lastBuild: JSON.stringify(new Date().toLocaleString()),
             commitDate: JSON.stringify(commitDate),
             commitHash: JSON.stringify(commitHash),

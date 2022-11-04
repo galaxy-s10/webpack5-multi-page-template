@@ -2,6 +2,8 @@ import fs, { statSync } from 'fs';
 
 import through2 from 'through2';
 
+import { outputStaticUrl } from './constant';
+
 const path = require('path');
 const process = require('process');
 
@@ -118,6 +120,13 @@ function removeOld() {
 function copy() {
   return gulp.src('./dist/**/*').pipe(gulp.dest('./inlineDist'));
 }
+
+const prefix = outputStaticUrl(true);
+
+const cssReg = new RegExp(
+  /<link href="((\.\/css\/([^?]+)\.css)[?a-zA-Z0-9]+)" rel="stylesheet">/
+);
+console.log(cssReg);
 
 function replace() {
   return gulp

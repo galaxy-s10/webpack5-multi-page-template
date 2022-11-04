@@ -1,18 +1,7 @@
-@import '@/css/common/index.scss';
+// @import '../../assets/css/mixin.scss'; //不建议使用import
+// @use '../../assets/css/mixin.scss'; //默认命名空间是文件名，即mixin
 
-#loading-wrap {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 999;
-  .loading {
-    position: fixed !important;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    @include loading-size($px: 100px, $color: var(--color, skyblue));
-  }
+#loading-modal {
+  // @extend %fullMixin; //占位符选择器是全局的，不需要添加命名空间
+  @include global.loadingSizeChange(100px, var(--color, skyblue));
 }

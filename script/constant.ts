@@ -5,5 +5,5 @@ export const webpackBarEnable = false; // 是否开启WebpackBar（开发环境�
 // eslint-disable-next-line
 export const outputStaticUrl = (isProduction = false) => {
   // 这个outputStaticUrl方法，不会影响多页面引入的js/css的publicPath
-  return '/';
+  return '/aaa/';
 };
