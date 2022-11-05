@@ -121,20 +121,24 @@ function copy() {
   return gulp.src('./dist/**/*').pipe(gulp.dest('./inlineDist'));
 }
 
-const prefix = outputStaticUrl(true);
+const prefix = outputStaticUrl(true).replace(/\/$/, ''); // 将最后的/替换掉
 
 const cssReg = new RegExp(
-  /<link href="((\.\/css\/([^?]+)\.css)[?a-zA-Z0-9]+)" rel="stylesheet">/
+  `<link href="((${prefix}/css/([^?]+)\\.css)[?a-zA-Z0-9]+)" rel="stylesheet">`
 );
-console.log(cssReg);
 
 function replace() {
   return gulp
     .src('./inlineDist/**/*.html')
     .pipe(
       gulpReplace(
-        /<link href="((\.\/css\/([^?]+)\.css)[?a-zA-Z0-9]+)" rel="stylesheet">/,
-        '<link href="$2" rel="stylesheet" inline>'
+        cssReg,
+        (res1, res2, res3) => {
+          console.log(res3);
+          const path = res3.replace(prefix, '.');
+          return `<link href="${path}" rel="stylesheet" inline>`;
+        }
+        // '<link href="$2" rel="stylesheet" inline>'
       ) // 将link标签里的./css/xxx.css内联到html里面
     )
     .pipe(
