@@ -69,24 +69,21 @@ const jsReg = new RegExp(
   `<script defer="defer" src="((${prefix}/js/[^?]+)\\.js)[?a-zA-Z0-9]+">`
 );
 
+// 将所有css和带defer标志的js内联到html
 function replace() {
   return gulp
     .src('./inlineDist/**/*.html')
     .pipe(
-      gulpReplace(
-        cssReg,
-        (res1, res2, res3) => {
-          const path = res3.replace(prefix, '.');
-          return `<link href="${path}" rel="stylesheet" inline>`;
-        }
-        // '<link href="$2" rel="stylesheet" inline>'
-      ) // 将link标签里的./css/xxx.css内联到html里面
+      gulpReplace(cssReg, (res1, res2, res3) => {
+        const path = res3.replace(prefix, '.');
+        return `<link href="${path}" rel="stylesheet" inline>`;
+      }) // 将link标签里的css内联到html里面
     )
     .pipe(
       gulpReplace(jsReg, (res1, res2) => {
         const path = res2.replace(prefix, '.');
         return `<script defer="defer" src="${path}" inline>`;
-      }) // 将script标签里的./js/xxx.js内联到html里面
+      }) // 将script标签里的js内联到html里面
     )
     .pipe(
       inlinesource({
@@ -98,6 +95,8 @@ function replace() {
     .pipe(gulp.dest('./inlineDist'));
 }
 
+// 如果html页面小于50kb,则优先内联css,再内联js,每次内联后都判断内联后的html是否大于50kb,大于的话就不内联了
+// 直接读取所有css和js,根据大小排序,先将css内联,将内联js
 function autoReplace() {
   return gulp
     .src('./inlineDist/**/*.html')
