@@ -32,7 +32,8 @@ export default (isProduction) => {
       entry: path.resolve(__dirname, '../src/page/home/home.ts'), // 这个页面的ts文件入口
       hash: true,
       minify,
-      chunks: ['home', 'index'], // 如果设置['home', 'index']，那么index的逻辑也会加到home页面
+      chunks: ['home'],
+      // chunks: ['home', 'index'], // 如果设置['home', 'index']，那么index的逻辑也会加到home页面
     },
     {
       name: 'about',

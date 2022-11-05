@@ -1,5 +1,6 @@
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import portfinder from 'portfinder';
+import { Configuration } from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
 import WebpackBar from 'webpackbar';
 
@@ -21,7 +22,7 @@ export default new Promise((resolve) => {
       stopPort: 9000,
     })
     .then((port) => {
-      resolve({
+      const devConfig: Configuration = {
         target: 'web',
         mode: 'development',
         devtool: 'eval', // eval，具有最高性能的开发构建的推荐选择。
@@ -46,7 +47,11 @@ export default new Promise((resolve) => {
                * 如果publicPath设置了/abc，就不能直接设置historyApiFallback: true，这样会重定向到根目录下的index.html
                * publicPath设置了/abc，就重定向到/abc，这样就可以了
                */
-              { from: outputStaticUrl(false), to: outputStaticUrl(false) },
+              {
+                // from: outputStaticUrl(false),
+                from: new RegExp(outputStaticUrl(false)),
+                to: outputStaticUrl(false),
+              },
             ],
           },
           watchFiles: ['src/**/*'], // 不设置该属性的话，修改src目录的html文件不会触发热更新
@@ -106,6 +111,7 @@ export default new Promise((resolve) => {
             },
           },
         },
+        // @ts-ignore
         plugins: [
           // 构建进度条
           webpackBarEnable && new WebpackBar(),
@@ -130,7 +136,8 @@ export default new Promise((resolve) => {
             network: `http://${localIPv4}:${port}${outputStaticUrl(false)}`,
           }),
         ].filter(Boolean),
-      });
+      };
+      resolve(devConfig);
     })
     .catch((error) => {
       console.log(error);

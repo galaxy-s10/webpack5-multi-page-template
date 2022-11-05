@@ -1,4 +1,4 @@
-import fs, { statSync } from 'fs';
+import { statSync } from 'fs';
 
 import through2 from 'through2';
 
@@ -43,62 +43,50 @@ const formatMemorySize = (val: number, num = 2) => {
   return `${format(val / oneTb)}tb`;
 };
 
-function autoReplace() {
+function changeChdir(done) {
+  process.chdir(path.resolve(__filename, '../../'));
+  done();
+}
+
+function removeOld() {
+  return del(['./inlineDist/']);
+}
+
+function copy() {
+  return gulp.src('./dist/**/*').pipe(gulp.dest('./inlineDist'));
+}
+
+const prefix =
+  outputStaticUrl(true) === './'
+    ? './'
+    : outputStaticUrl(true).replace(/\/$/, ''); // 将最后的/替换掉
+
+const cssReg = new RegExp(
+  `<link href="((${prefix}/css/([^?]+)\\.css)[?a-zA-Z0-9]+)" rel="stylesheet">`
+);
+
+const jsReg = new RegExp(
+  `<script defer="defer" src="((${prefix}/js/[^?]+)\\.js)[?a-zA-Z0-9]+">`
+);
+
+function replace() {
   return gulp
     .src('./inlineDist/**/*.html')
     .pipe(
-      through2.obj(function (file, encoding, next) {
-        const str = file.contents.toString();
-        const cssReg =
-          /<link href="((\.\/css\/([^?]+)\.css)[?a-zA-Z0-9]+)" rel="stylesheet">/g;
-        const jsReg =
-          /<script defer="defer" src="((.\/js\/[^?]+)\.js)[?a-zA-Z0-9]+">/g;
-        const cssRes = str.replace(cssReg, (res1, res2, res3) => {
-          // console.log(res1, res2, res3);
-          const stat = statSync(path.resolve(distDir, res3));
-          const size = stat.size;
-          const flag = 1024 * 4;
-          if (size < flag) {
-            console.log(
-              `${res3}大小：${formatMemorySize(size)}，小于${formatMemorySize(
-                flag
-              )}，内联进html`
-            );
-            return `<link href="${res3}" rel="stylesheet" inline>`;
-          } else {
-            console.log(
-              `${res3}大小：${formatMemorySize(size)}，大于${formatMemorySize(
-                flag
-              )}，不内联进html`
-            );
-          }
-
-          return res1;
-        });
-        const lastRes = cssRes.replace(jsReg, (res1, res2) => {
-          const stat = statSync(path.resolve(distDir, res2));
-          const size = stat.size;
-          const flag = 1024 * 10;
-          if (size < flag) {
-            console.log(
-              `${res2}大小：${formatMemorySize(size)}，小于${formatMemorySize(
-                flag
-              )}，内联进html`
-            );
-            return `<script defer="defer" src="${res2}" inline>`;
-          } else {
-            console.log(
-              `${res2}大小：${formatMemorySize(size)}，大于${formatMemorySize(
-                flag
-              )}，不内联进html`
-            );
-          }
-          return res1;
-        });
-        // console.log(res, 9998);
-        file.contents = Buffer.from(lastRes);
-        next(null, file);
-      })
+      gulpReplace(
+        cssReg,
+        (res1, res2, res3) => {
+          const path = res3.replace(prefix, '.');
+          return `<link href="${path}" rel="stylesheet" inline>`;
+        }
+        // '<link href="$2" rel="stylesheet" inline>'
+      ) // 将link标签里的./css/xxx.css内联到html里面
+    )
+    .pipe(
+      gulpReplace(jsReg, (res1, res2) => {
+        const path = res2.replace(prefix, '.');
+        return `<script defer="defer" src="${path}" inline>`;
+      }) // 将script标签里的./js/xxx.js内联到html里面
     )
     .pipe(
       inlinesource({
@@ -110,42 +98,59 @@ function autoReplace() {
     .pipe(gulp.dest('./inlineDist'));
 }
 
-function changeChdir(done) {
-  process.chdir(path.resolve(__filename, '../../'));
-  done();
-}
-function removeOld() {
-  return del(['./inlineDist/']);
-}
-function copy() {
-  return gulp.src('./dist/**/*').pipe(gulp.dest('./inlineDist'));
-}
-
-const prefix = outputStaticUrl(true).replace(/\/$/, ''); // 将最后的/替换掉
-
-const cssReg = new RegExp(
-  `<link href="((${prefix}/css/([^?]+)\\.css)[?a-zA-Z0-9]+)" rel="stylesheet">`
-);
-
-function replace() {
+function autoReplace() {
   return gulp
     .src('./inlineDist/**/*.html')
     .pipe(
-      gulpReplace(
-        cssReg,
-        (res1, res2, res3) => {
-          console.log(res3);
-          const path = res3.replace(prefix, '.');
-          return `<link href="${path}" rel="stylesheet" inline>`;
-        }
-        // '<link href="$2" rel="stylesheet" inline>'
-      ) // 将link标签里的./css/xxx.css内联到html里面
-    )
-    .pipe(
-      gulpReplace(
-        /<script defer="defer" src="((.\/js\/[^?]+)\.js)[?a-zA-Z0-9]+">/,
-        '<script defer="defer" src="$1" inline>'
-      ) // 将script标签里的./js/xxx.js内联到html里面
+      through2.obj(function (file, encoding, next) {
+        const str = file.contents.toString();
+        const cssRes = str.replace(cssReg, (res1, res2, res3) => {
+          // console.log(res1, res2, res3);
+          const stat = statSync(path.resolve(distDir, res3));
+          const size = stat.size;
+          const flag = 1024 * 4;
+          if (size < flag) {
+            console.log(
+              `${res3}大小：${formatMemorySize(size)}，小于${formatMemorySize(
+                flag
+              )}，内联进html`
+            );
+            const path = res3.replace(prefix, '.');
+            return `<link href="${path}" rel="stylesheet" inline>`;
+          } else {
+            console.log(
+              `${res3}大小：${formatMemorySize(size)}，大于${formatMemorySize(
+                flag
+              )}，不内联进html`
+            );
+            return res1;
+          }
+        });
+        const lastRes = cssRes.replace(jsReg, (res1, res2) => {
+          const stat = statSync(path.resolve(distDir, res2));
+          const size = stat.size;
+          const flag = 1024 * 10;
+          if (size < flag) {
+            console.log(
+              `${res2}大小：${formatMemorySize(size)}，小于${formatMemorySize(
+                flag
+              )}，内联进html`
+            );
+            const path = res2.replace(prefix, '.');
+            return `<script defer="defer" src="${path}" inline>`;
+          } else {
+            console.log(
+              `${res2}大小：${formatMemorySize(size)}，大于${formatMemorySize(
+                flag
+              )}，不内联进html`
+            );
+            return res1;
+          }
+        });
+        // console.log(res, 9998);
+        file.contents = Buffer.from(lastRes);
+        next(null, file);
+      })
     )
     .pipe(
       inlinesource({

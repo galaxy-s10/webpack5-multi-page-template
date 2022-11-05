@@ -1,4 +1,4 @@
-// 请尽量不要全局引入这个文件，该文件有一个@keyframes是一定并且只会被编译一次的
+// 请尽量不要全局引入这个文件，该文件有一个@keyframes是一定被编译一次的
 // 虽然@keyframes会被编译，但是如果有css模块化的话，其实也不会受影响
 
 @keyframes flashTxtMove {

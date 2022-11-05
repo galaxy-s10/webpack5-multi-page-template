@@ -2,13 +2,14 @@ import CompressionPlugin from 'compression-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
+import { Configuration } from 'webpack';
 import WebpackBar from 'webpackbar';
 
 import { chalkINFO } from '../utils/chalkTip';
 
 console.log(chalkINFO(`读取: ${__filename.slice(__dirname.length + 1)}`));
 
-export default {
+const prodConfig: Configuration = {
   mode: 'production',
   devtool: false,
   output: {
@@ -85,7 +86,10 @@ export default {
     //   minRatio: 0.8, // 只有压缩比这个比率更好的资产才会被处理(minRatio =压缩大小/原始大小),即压缩如果达不到0.8就不会进行压缩
     //   algorithm: 'gzip', // 压缩算法
     // }),
-    // 将 CSS 提取到单独的文件中
+    /**
+     * 默认js里面的import的css，会使用js动态生成style标签并且带上css
+     * mini-css-extract-plugin插件能够提取js里面import的css，将里面的css单独输出，然后通过link标签引入
+     */
     new MiniCssExtractPlugin({
       /**
        * Options similar to the same options in webpackOptions.output
@@ -97,3 +101,5 @@ export default {
     }),
   ],
 };
+
+export default prodConfig;

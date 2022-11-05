@@ -4,13 +4,18 @@ import CopyWebpackPlugin from 'copy-webpack-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
 import Handlebars from 'handlebars';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { DefinePlugin } from 'webpack';
+import { Configuration, DefinePlugin } from 'webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { merge } from 'webpack-merge';
 
 import pkg from '../../package.json';
 import InjectProjectInfoPlugin from '../InjectProjectInfoPlugin';
-import { eslintEnable, outputDir, outputStaticUrl } from '../constant';
+import {
+  analyzer,
+  eslintEnable,
+  outputDir,
+  outputStaticUrl,
+} from '../constant';
 import { chalkINFO, chalkWARN } from '../utils/chalkTip';
 import generatePageConfig from '../utils/handlePage';
 import { resolveApp } from '../utils/path';
@@ -21,7 +26,7 @@ console.log(chalkINFO(`读取: ${__filename.slice(__dirname.length + 1)}`));
 
 const commonConfig = (isProduction) => {
   const { entry, htmlWebpackPlugins } = generatePageConfig(isProduction);
-  const result = {
+  const result: Configuration = {
     // 入口，默认src/index.js
     entry,
     // 输出
@@ -153,7 +158,7 @@ const commonConfig = (isProduction) => {
           sideEffects: true,
         },
         {
-          test: /\.(jpg|jpeg|png|gif|svg)$/,
+          test: /\.(jpg|jpeg|png|gif|svg|webp)$/,
           type: 'asset',
           generator: {
             filename: 'img/[name]-[contenthash:6][ext]',
@@ -203,17 +208,6 @@ const commonConfig = (isProduction) => {
     plugins: [
       // 友好的显示错误信息在终端
       new FriendlyErrorsWebpackPlugin(),
-      // eslint
-      eslintEnable &&
-        new ESLintPlugin({
-          extensions: ['js', 'jsx', 'ts', 'tsx'],
-          emitError: false, // 发现的错误将始终发出，禁用设置为false.
-          emitWarning: false, // 找到的警告将始终发出，禁用设置为false.
-          failOnError: false, // 如果有任何错误，将导致模块构建失败，禁用设置为false
-          failOnWarning: false, // 如果有任何警告，将导致模块构建失败，禁用设置为false
-          cache: true,
-          cacheLocation: resolveApp('./node_modules/.cache/.eslintcache'),
-        }),
       // 将已存在的单个文件或整个目录复制到构建目录。
       new CopyWebpackPlugin({
         patterns: [
@@ -246,13 +240,23 @@ const commonConfig = (isProduction) => {
       }),
       // 多页面配置
       ...htmlWebpackPlugins,
-      // new HtmlWebpackInlineSourcePlugin(),
       // 注入项目信息
       new InjectProjectInfoPlugin({
         isProduction,
       }),
+      // eslint
+      eslintEnable &&
+        new ESLintPlugin({
+          extensions: ['js', 'jsx', 'ts', 'tsx'],
+          emitError: false, // 发现的错误将始终发出，禁用设置为false.
+          emitWarning: false, // 找到的警告将始终发出，禁用设置为false.
+          failOnError: false, // 如果有任何错误，将导致模块构建失败，禁用设置为false
+          failOnWarning: false, // 如果有任何警告，将导致模块构建失败，禁用设置为false
+          cache: true,
+          cacheLocation: resolveApp('./node_modules/.cache/.eslintcache'),
+        }),
       // bundle分析
-      process.env.WEBPACK_ANALYZER_SWITCH &&
+      analyzer &&
         new BundleAnalyzerPlugin({
           analyzerMode: 'server',
           generateStatsFile: true,
