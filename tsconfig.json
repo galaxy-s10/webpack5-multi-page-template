@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES5",
-    // "target": "ESNext",
-    "module": "ESNext", // ESNext,commonjs
+    "target": "ESNext", // ts-loader设置了transpileOnly: true,因此这个值其实不会影响输出
+    "module": "ESNext", // ESNext,CommonJS
     "strict": true,
     "noImplicitAny": false,
     "lib": ["DOM", "ESNext"],
@@ -13,7 +12,6 @@
     "skipLibCheck": true, // 跳过d.ts声明文件的类型检查。
     "baseUrl": "./",
     "resolveJsonModule": true, //解析json模块
-
     "paths": {
       "@/*": ["src/*"]
     }
@@ -27,5 +25,5 @@
     },
     "transpileOnly": true // 只编译，报警告或者错误一样运行
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "script/**/*.ts"] // 仅仅匹配这些文件，除了src以外的文件都不会被匹配
+  "include": ["src/**/*.ts", "script/**/*.ts"] // 仅仅匹配这些文件，除了src以外的文件都不会被匹配
 }

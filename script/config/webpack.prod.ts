@@ -5,6 +5,7 @@ import TerserPlugin from 'terser-webpack-plugin';
 import { Configuration } from 'webpack';
 import WebpackBar from 'webpackbar';
 
+import { gzipEnable } from '../constant';
 import { chalkINFO } from '../utils/chalkTip';
 
 console.log(chalkINFO(`读取: ${__filename.slice(__dirname.length + 1)}`));
@@ -76,16 +77,18 @@ const prodConfig: Configuration = {
       }), // css压缩，去除无用的空格等等
     ],
   },
+  // @ts-ignore
   plugins: [
     // 构建进度条
     new WebpackBar(),
     // http压缩
-    // new CompressionPlugin({
-    //   test: /\.(css|js)$/i,
-    //   threshold: 10 * 1024, // 大于10k的文件才进行压缩
-    //   minRatio: 0.8, // 只有压缩比这个比率更好的资产才会被处理(minRatio =压缩大小/原始大小),即压缩如果达不到0.8就不会进行压缩
-    //   algorithm: 'gzip', // 压缩算法
-    // }),
+    gzipEnable &&
+      new CompressionPlugin({
+        test: /\.(css|js)$/i,
+        threshold: 10 * 1024, // 大于10k的文件才进行压缩
+        minRatio: 0.8, // 只有压缩比这个比率更好的资产才会被处理(minRatio =压缩大小/原始大小),即压缩如果达不到0.8就不会进行压缩
+        algorithm: 'gzip', // 压缩算法
+      }),
     /**
      * 默认js里面的import的css，会使用js动态生成style标签并且带上css
      * mini-css-extract-plugin插件能够提取js里面import的css，将里面的css单独输出，然后通过link标签引入
@@ -99,7 +102,7 @@ const prodConfig: Configuration = {
       chunkFilename: 'css/[id]-[contenthash:6].css',
       ignoreOrder: false, // Enable to remove warnings about conflicting order
     }),
-  ],
+  ].filter(Boolean),
 };
 
 export default prodConfig;

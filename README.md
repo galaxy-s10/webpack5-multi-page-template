@@ -2,7 +2,7 @@
 
 > 在不使用框架开发项目的情况下，可以提供开箱即用、支持配置多页面的项目模板
 
-- [x] 使用 webpack5 构建，支持开发热更新
+- [x] 使用 webpack5 + gulp4 构建，支持开发热更新
 - [x] 支持 typescript
 - [x] js 和 css 处理：babel + postcss
 - [x] css 预处理器： scss
@@ -18,17 +18,30 @@ config/pageConfig.ts：
 
 ```typescript
 {
-  name: 'index', // 这个页面的块（chunk）名，最终也是路径名（localhost:8000/index.html）
-  template: path.resolve(__dirname, '../src/page/index.html'), // 这个页面的html文件位置
-  entry: path.resolve(__dirname, '../src/page/index.ts'), // 这个页面的ts文件入口
-  chunks: ['index'],// 这个页面使用的chunks
-},
-{
-  name: 'home', // 这个页面的块（chunk）名，最终也是路径名（localhost:8000/home.html）
-  template: path.resolve(__dirname, '../src/page/home/home.html'), // 这个页面的html文件位置
-  entry: path.resolve(__dirname, '../src/page/home/home.ts'), // 这个页面的ts文件入口
-  chunks: ['home', 'index'], // 如果设置['home', 'index']，那么index的逻辑也会加到home页面
-},
+    name: 'index', // 这个页面的块（chunk）名
+    template: path.resolve(__dirname, '../src/page/index.html'), // 这个页面的html文件位置
+    entry: path.resolve(__dirname, '../src/page/index.ts'), // 这个页面的ts文件入口
+    hash: true,
+    minify,
+    chunks: ['index'],
+  },
+  {
+    name: 'home', // 这个页面的块（chunk）名
+    template: path.resolve(__dirname, '../src/page/home/home.html'), // 这个页面的html文件位置
+    entry: path.resolve(__dirname, '../src/page/home/home.ts'), // 这个页面的ts文件入口
+    hash: true,
+    minify,
+    chunks: ['home'],
+    // chunks: ['home', 'index'], // 如果设置['home', 'index']，那么index的逻辑也会加到home页面
+  },
+  {
+    name: 'about',
+    template: path.resolve(__dirname, '../src/page/about/index.html'), // 这个页面的html文件位置
+    entry: path.resolve(__dirname, '../src/page/about/index.ts'), // 这个页面的ts文件入口
+    hash: true,
+    minify,
+    chunks: ['about'], // 限制块，如果希望about页面不和其他页面关联，就设置about
+  },
 ```
 
 # 安装依赖
@@ -55,10 +68,18 @@ pnpm run build
 
 # 内联打包
 
-将外部 js 和 css 都注入到 html 里面，最终打包生成的目录：`inlineDist`
+将所有外部 js 和 css 都注入到 html 里面，最终打包生成的目录：`inlineDist`
 
 ```sh
 pnpm run gulp:replace
+```
+
+# 内联打包
+
+将符合条件的外部js 和 css 都注入到 html 里面，最终打包生成的目录：`inlineDist`
+
+```sh
+pnpm run gulp:build
 ```
 
 # 提交代码

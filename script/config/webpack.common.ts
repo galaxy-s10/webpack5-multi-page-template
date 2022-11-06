@@ -33,7 +33,9 @@ const commonConfig = (isProduction) => {
     output: {
       filename: '[name].bundle.js',
       path: resolveApp(`./${outputDir}`),
-      publicPath: outputStaticUrl(isProduction),
+      // 如果HtmlWebpackPlugin配置了publicPath,就以HtmlWebpackPlugin的publicPath为准,
+      // 如果HtmlWebpackPlugin没有配置publicPath,默认使用output.publicPath
+      // publicPath: '不用设置output.publicPath',
     },
     resolve: {
       // 解析路径

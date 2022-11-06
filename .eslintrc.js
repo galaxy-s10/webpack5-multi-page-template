@@ -59,8 +59,10 @@ module.exports = {
     'no-console': 0, // 此规则不允许调用console对象的方法。
     'spaced-comment': ['error', 'always', { exceptions: ['-', '+'] }], // 该规则强制注释中 // 或 /* 后空格的一致性
     'no-var': 2, // 要求let或const代替var
-    camelcase: 2, // 强制执行驼峰命名约定
-    'no-param-reassign': 2, // 禁止对 function 的参数进行重新赋值
+    camelcase: [
+      'error',
+      { properties: 'never' }, // properties默认always，即检查属性名；可以设置为never，即不检查属性名
+    ], // 强制执行驼峰命名约定    'no-param-reassign': 2, // 禁止对 function 的参数进行重新赋值
     'no-nested-ternary': 2, // 禁止嵌套三元
     'no-plusplus': 2, // 禁用一元操作符 ++ 和 --
     'no-unused-vars': ['error', { argsIgnorePattern: '^_' }], // 禁止出现未使用过的变量

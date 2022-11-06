@@ -1,5 +1,6 @@
 import { initLoading, startLoading, endLoading } from '@/component/loading';
 import { initToast, showToast, hiddenToast } from '@/component/toast';
+
 import '@/assets/css/index.scss';
 
 initToast({ duration: 2000 });

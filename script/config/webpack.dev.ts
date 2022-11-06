@@ -49,8 +49,13 @@ export default new Promise((resolve) => {
                */
               {
                 // from: outputStaticUrl(false),
-                from: new RegExp(outputStaticUrl(false)),
-                to: outputStaticUrl(false),
+                from: new RegExp(
+                  outputStaticUrl(false) === './' ? '/' : outputStaticUrl(false)
+                ),
+                to:
+                  outputStaticUrl(false) === './'
+                    ? '/'
+                    : outputStaticUrl(false),
               },
             ],
           },
@@ -132,8 +137,12 @@ export default new Promise((resolve) => {
           }),
           // 打印控制调试地址
           new TerminalPrintPlugin({
-            local: `http://localhost:${port}${outputStaticUrl(false)}`,
-            network: `http://${localIPv4}:${port}${outputStaticUrl(false)}`,
+            local: `http://localhost:${port}${
+              outputStaticUrl(false) === './' ? '/' : outputStaticUrl(false)
+            }`,
+            network: `http://${localIPv4}:${port}${
+              outputStaticUrl(false) === './' ? '/' : outputStaticUrl(false)
+            }`,
           }),
         ].filter(Boolean),
       };
