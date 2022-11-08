@@ -27,6 +27,15 @@ console.log(chalkINFO(`读取: ${__filename.slice(__dirname.length + 1)}`));
 const commonConfig = (isProduction) => {
   const { entry, htmlWebpackPlugins } = generatePageConfig(isProduction);
   const result: Configuration = {
+    /**
+     * 暂时添加target属性以解决.browserlistrc文件的问题。https://github.com/webpack/webpack-dev-server/issues/2758
+     * https://webpack.js.org/configuration/target/#string
+     * 升级webpack-dev-serve@4.x后就可以去掉了这个属性了。
+     * 因为webpack5环境下，根目录有.browserslistrc文件，会导致热更新失效，
+     * 因此设置target属性，在开发环境不使用.browserslistrc文件，设置为web
+     */
+    // target: "browserslist",//设置成browserslist的话，热更新会失效！
+    target: isProduction ? 'browserslist' : 'web',
     // 入口，默认src/index.js
     entry,
     // 输出
@@ -48,15 +57,6 @@ const commonConfig = (isProduction) => {
     resolveLoader: {
       // 用于解析webpack的loader
       modules: ['node_modules'],
-    },
-    cache: {
-      // type: 'memory',
-      type: 'filesystem',
-      buildDependencies: {
-        // https://webpack.js.org/configuration/cache/#cacheallowcollectingmemory
-        // 建议cache.buildDependencies.config: [__filename]在您的 webpack 配置中设置以获取最新配置和所有依赖项。
-        config: [__filename],
-      },
     },
     module: {
       // loader执行顺序：从下往上，从右往左

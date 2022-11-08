@@ -23,13 +23,21 @@ export default new Promise((resolve) => {
     })
     .then((port) => {
       const devConfig: Configuration = {
-        target: 'web',
         mode: 'development',
         devtool: 'eval', // eval，具有最高性能的开发构建的推荐选择。
         stats: 'errors-warnings', // 只显示警告和错误信息（webpack-dev-server4.x后变了）
         // 这个infrastructureLogging设置参考了vuecli5，如果不设置，webpack-dev-server会打印一些信息
         infrastructureLogging: {
           level: 'none',
+        },
+        cache: {
+          // type: 'memory',
+          type: 'filesystem',
+          buildDependencies: {
+            // https://webpack.js.org/configuration/cache/#cacheallowcollectingmemory
+            // 建议cache.buildDependencies.config: [__filename]在您的 webpack 配置中设置以获取最新配置和所有依赖项。
+            config: [__filename],
+          },
         },
         devServer: {
           client: {
