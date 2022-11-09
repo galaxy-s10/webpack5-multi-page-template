@@ -71,7 +71,8 @@ const prodConfig: Configuration = {
           mangle: true,
           toplevel: false, // 注意：terserOptions.toplevel被标记了deprecated。默认false,如果希望启用顶级变量和函数名修改,并删除未使用的变量和函数,则设置为true。
           keep_classnames: true, // 默认undefined,传递true以防止丢弃或混淆类名。
-          keep_fnames: true, // 默认false,传递true以防止函数名被丢弃或混淆。
+          keep_fnames: false, // 默认false,传递true以防止函数名被丢弃或混淆。
+          // TODO 外层的keep_classnames和keep_fnames和compress的有啥区别or优先级？
         },
       }),
       new CssMinimizerPlugin({
