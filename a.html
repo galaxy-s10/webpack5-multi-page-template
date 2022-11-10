@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="X-UA-Compatible"
+      content="IE=edge"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <img
+      src="https://resource.hsslive.cn/image/1578937683585vueblog.webp"
+      width="50px"
+      height="50px"
+      alt=""
+    />
+    <div style="width: 50px; height: 0.5px; background-color: red"></div>
+    <br />
+    <div
+      style="
+        width: 50px;
+        height: 10px;
+        background-color: yellow;
+        border-bottom: 1px solid blue;
+      "
+    ></div>
+    <br />
+    <div
+      style="
+        width: 50px;
+        height: 10px;
+        background-color: skyblue;
+        border-bottom: 0.5px solid orange;
+      "
+    ></div>
+
+    <br />
+    <div style="border-top: 0.5px solid red"></div>
+    <script>
+      var docEl = document.documentElement;
+
+      var fakeBody = document.createElement('body');
+      var testElement = document.createElement('div');
+      testElement.style.border = '.5px solid transparent';
+      fakeBody.appendChild(testElement);
+      docEl.appendChild(fakeBody);
+      console.log(testElement.offsetHeight === 1, testElement.offsetHeight);
+      if (testElement.offsetHeight === 1) {
+        docEl.classList.add('hairlines');
+      }
+      console.log('devicePixelRatio', devicePixelRatio);
+      console.log('devicePixelRatio', devicePixelRatio);
+      // docEl.removeChild(fakeBody);
+    </script>
+  </body>
+</html>

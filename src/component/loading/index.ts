@@ -22,7 +22,11 @@ export const initLoading = (initConfig?: IConfig) => {
   containerEle = document.createElement('div');
   containerEle.className = 'container';
   loadingEle.appendChild(containerEle);
-  document.body.appendChild(loadingEle);
+  // document.body.appendChild(loadingEle);
+  // 使用appendChild追加到body底部的话，可能会把节点生成在script标签后面，
+  // 如果script使用了src或者defer等标识了是异步的，即使节点在script后面也没事
+  // 但是如果是script标签内联了代码，就可能会报错找不到节点
+  document.body.insertBefore(loadingEle, document.body.firstChild);
 };
 
 export const startLoading = () => {

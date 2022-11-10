@@ -65,6 +65,7 @@
     "portfinder": "^1.0.28",
     "postcss": "^8.4.8",
     "postcss-loader": "^6.2.1",
+    "postcss-plugin-px2rem": "^0.8.1",
     "postcss-preset-env": "^7.4.2",
     "postcss-px-to-viewport": "^1.1.1",
     "prettier": "^2.5.1",

@@ -16,7 +16,7 @@ export default (isProduction: boolean) => {
         filename: `${name}.html`,
         // 如果HtmlWebpackPlugin配置了publicPath,就以HtmlWebpackPlugin的publicPath为准,
         // 如果HtmlWebpackPlugin没有配置publicPath,默认使用output.publicPath
-        publicPath: outputStaticUrl(true),
+        publicPath: outputStaticUrl(isProduction),
         template: item.template,
         hash: item.hash,
         minify: item.minify,

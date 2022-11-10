@@ -24,30 +24,9 @@ module.exports = {
   },
   plugins: ['import', '@typescript-eslint'],
   parser: '@typescript-eslint/parser',
-  overrides: [
-    // {
-    //   files: ['*.ts', '*.tsx'],
-    //   parser: '@typescript-eslint/parser',
-    //   /**
-    //    * babel-eslint插件能动态import。默认的eslint解析器不能理解第三阶段的建议。https://github.com/import-js/eslint-plugin-import/issues/890
-    //    * babel-eslint@10.1.0: babel-eslint is now @babel/eslint-parser. This package will no longer receive updates.
-    //    * 好像不用它也行。
-    //    * parser: '@babel/eslint-parser',
-    //    */
-    //   parserOptions: {},
-    //   extends: [
-    //     // 'airbnb-base', // airbnb的eslint规范，它会对import和require进行排序，挺好的。如果不用它的话，需要在env添加node:true
-    //     'eslint:recommended',
-    //     'plugin:import/recommended',
-    //     'plugin:vue/vue3-recommended',
-    //     '@vue/eslint-config-typescript',
-    //     '@vue/eslint-config-prettier',
-    //   ],
-    //   plugins: ['import'],
-    //   rules: {},
-    // },
-  ],
-  // rules优先级最高，会覆盖上面的
+  // overrides: [],
+  // rules会覆盖extends里面的规则（https://eslint.org/docs/latest/user-guide/migrating-to-6.0.0#-overrides-in-an-extended-config-file-can-now-be-overridden-by-a-parent-config-file）
+  // rules里面的规则不会对overrides里面的文件生效
   rules: {
     /**
      * 0 => off

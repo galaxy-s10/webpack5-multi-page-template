@@ -1,6 +1,9 @@
 #home {
   color: skyblue;
 }
+.ignore-1 {
+  width: 100px;
+}
 .fire-ico {
   @include global.setBackground('../img/fire-ico.png');
   // @include setBackground('/public/img/fire-ico.png');

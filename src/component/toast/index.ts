@@ -21,7 +21,11 @@ export const initToast = (initConfig?: IConfig) => {
   containerEle = document.createElement('div');
   containerEle.className = 'container';
   toastEle.appendChild(containerEle);
-  document.body.appendChild(toastEle);
+  // document.body.appendChild(toastEle);
+  // 使用appendChild追加到body底部的话，可能会把节点生成在script标签后面，
+  // 如果script使用了src或者defer等标识了是异步的，即使节点在script后面也没事
+  // 但是如果是script标签内联了代码，就可能会报错找不到节点
+  document.body.insertBefore(toastEle, document.body.firstChild);
 };
 
 export const showToast = (content: string, newConfig?: IConfig) => {
