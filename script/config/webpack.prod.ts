@@ -83,7 +83,7 @@ const prodConfig: Configuration = {
   // @ts-ignore
   plugins: [
     // 构建进度条
-    new WebpackBar(),
+    // new WebpackBar(),
     // http压缩
     gzipEnable &&
       new CompressionPlugin({

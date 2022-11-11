@@ -1,23 +1,9 @@
-import { initLoading, startLoading, endLoading } from '@/component/loading';
-import { initToast, showToast, hiddenToast } from '@/component/toast';
+// import { Switch } from 'ant-design-vue';
 
-import '@/assets/css/index.scss';
+// console.log(Switch, '1211111111111');
+import { Button, Switch } from 'ant-design-vue';
 
-initToast({ duration: 2000 });
-initLoading();
+console.log(Button, Switch, '2111111');
+// import { Switch, Avatar } from 'ant-design-vue';
 
-startLoading();
-
-setTimeout(() => {
-  endLoading();
-}, 1000);
-
-setTimeout(() => {
-  showToast('hello world');
-
-  setTimeout(() => {
-    hiddenToast();
-  }, 1000);
-}, 1500);
-
-console.log('index页面');
+// console.log(Switch, Avatar, '22222331111');

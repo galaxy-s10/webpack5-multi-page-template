@@ -1,10 +1,12 @@
+const replaceLib = require('./replaceLib');
+
 console.log(
   '\x1B[0;37;44m INFO \x1B[0m',
   '\x1B[0;;34m ' +
     `读取了: ${__filename.slice(__dirname.length + 1)}` +
     ' \x1B[0m'
 );
-
+console.log(replaceLib);
 module.exports = {
   presets: [
     [
@@ -23,5 +25,14 @@ module.exports = {
       },
     ],
   ],
-  plugins: ['@babel/plugin-syntax-dynamic-import'],
+  plugins: [
+    '@babel/plugin-syntax-dynamic-import',
+    './replaceLib',
+    // [
+    //   'import',
+    //   { libraryName: 'ant-design-vue', libraryDirectory: 'lib' },
+    //   'ant-design-vue',
+    // ],
+  ],
+  // plugins: ['@babel/plugin-syntax-dynamic-import', './replaceLib'],
 };
