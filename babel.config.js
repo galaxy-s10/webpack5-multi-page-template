@@ -1,12 +1,9 @@
-const replaceLib = require('./replaceLib');
-
 console.log(
   '\x1B[0;37;44m INFO \x1B[0m',
   '\x1B[0;;34m ' +
     `读取了: ${__filename.slice(__dirname.length + 1)}` +
     ' \x1B[0m'
 );
-console.log(replaceLib);
 module.exports = {
   presets: [
     [
@@ -27,12 +24,18 @@ module.exports = {
   ],
   plugins: [
     '@babel/plugin-syntax-dynamic-import',
-    './replaceLib',
-    // [
-    //   'import',
-    //   { libraryName: 'ant-design-vue', libraryDirectory: 'lib' },
-    //   'ant-design-vue',
-    // ],
+    [
+      './replaceLib',
+      // Options在 babel@7+ 中不能是数组，但是可以添加带名字的插件来支持多个依赖。
+      { libraryName: 'ant-design-vue', libraryDirectory: 'lib', style: 'css' },
+      'aaa', // 这个名字可以随便起
+    ],
+    [
+      './replaceLib',
+      { libraryName: 'antd', libraryDirectory: 'lib', style: 'css' },
+      'bbb',
+    ],
+    // ['import', { libraryName: 'ant-design-vue1', libraryDirectory: 'lib' }],
   ],
   // plugins: ['@babel/plugin-syntax-dynamic-import', './replaceLib'],
 };
