@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="X-UA-Compatible"
+      content="IE=edge"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0"
+    />
+
+    <!-- webpackIgnore: true -->
+    <link
+      rel="icon"
+      href="{{BASE_URL}}favicon.ico"
+    />
+
+    <!-- 引入静态资源目录（public）的zepto.min.js -->
+    <!-- webpackIgnore: true -->
+    <script src="{{BASE_URL}}zepto.min.js"></script>
+    <title>{{title}}</title>
+  </head>
+  <body>
+    <div id="home">
+      <div>index页面</div>
+      <div id="clientHeight"></div>
+      <!-- 引用public里面的资源需要加上魔法注释，否则会报错 -->
+      <!-- webpackIgnore: true -->
+      <img
+        src="{{BASE_URL}}billd.webp"
+        width="50"
+        height="50"
+      />
+
+      <!-- 这个图片会被当做模块进行打包 -->
+      <img src="../../assets/img/earth.png" />
+      <div class="fire-ico"></div>
+      <br /><br />
+      <br /><br />
+      <br /><br />
+      <br /><br />
+      <input
+        type="text"
+        class="foot-btn"
+      />
+    </div>
+  </body>
+</html>

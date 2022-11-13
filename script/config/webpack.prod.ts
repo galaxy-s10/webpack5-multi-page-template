@@ -1,3 +1,4 @@
+import PreloadPlugin from '@vue/preload-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
@@ -83,7 +84,7 @@ const prodConfig: Configuration = {
   // @ts-ignore
   plugins: [
     // 构建进度条
-    // new WebpackBar(),
+    new WebpackBar(),
     // http压缩
     gzipEnable &&
       new CompressionPlugin({
@@ -104,6 +105,17 @@ const prodConfig: Configuration = {
       filename: 'css/[name]-[contenthash:6].css',
       chunkFilename: 'css/[id]-[contenthash:6].css',
       ignoreOrder: false, // Enable to remove warnings about conflicting order
+    }),
+    // 预加载
+    new PreloadPlugin({
+      rel: 'preload',
+      include: 'initial',
+      fileBlacklist: [/\.map$/, /hot-update\.js$/],
+    }),
+    // 预获取
+    new PreloadPlugin({
+      rel: 'prefetch',
+      include: 'asyncChunks',
     }),
   ].filter(Boolean),
 };

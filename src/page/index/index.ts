@@ -1,11 +1,10 @@
 import { initLoading, startLoading, endLoading } from '@/component/loading';
 import { initToast, showToast, hiddenToast } from '@/component/toast';
 
-import '@/assets/css/index.scss';
+import './index.scss';
 
 initToast({ duration: 2000 });
 initLoading();
-console.log(11);
 startLoading();
 
 setTimeout(() => {
@@ -19,5 +18,3 @@ setTimeout(() => {
     hiddenToast();
   }, 1000);
 }, 1500);
-
-console.log('index页面');

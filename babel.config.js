@@ -4,6 +4,7 @@ console.log(
     `读取了: ${__filename.slice(__dirname.length + 1)}` +
     ' \x1B[0m'
 );
+
 module.exports = {
   presets: [
     [
@@ -24,18 +25,20 @@ module.exports = {
   ],
   plugins: [
     '@babel/plugin-syntax-dynamic-import',
-    [
-      './replaceLib',
-      // Options在 babel@7+ 中不能是数组，但是可以添加带名字的插件来支持多个依赖。
-      { libraryName: 'ant-design-vue', libraryDirectory: 'lib', style: 'css' },
-      'aaa', // 这个名字可以随便起
-    ],
-    [
-      './replaceLib',
-      { libraryName: 'antd', libraryDirectory: 'lib', style: 'css' },
-      'bbb',
-    ],
-    // ['import', { libraryName: 'ant-design-vue1', libraryDirectory: 'lib' }],
+    // [
+    //   './replaceLib',
+    //   // Options在 babel@7+ 中不能是数组，但是可以添加带名字的插件来支持多个依赖。
+    //   { libraryName: 'ant-design-vue', libraryDirectory: 'lib', style: 'css' },
+    //   'aaa', // 这个名字可以随便起
+    // ],
+    // [
+    //   './replaceLib',
+    //   { libraryName: 'antd', libraryDirectory: 'lib', style: 'css' },
+    //   'bbb',
+    // ],
+    // [
+    //   'import',
+    //   { libraryName: 'ant-design-vue', libraryDirectory: 'lib', style: 'css' },
+    // ],
   ],
-  // plugins: ['@babel/plugin-syntax-dynamic-import', './replaceLib'],
 };

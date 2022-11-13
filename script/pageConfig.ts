@@ -20,8 +20,8 @@ export default (isProduction) => {
   return [
     {
       name: 'index', // 这个页面的块（chunk）名
-      template: path.resolve(__dirname, '../src/page/index.html'), // 这个页面的html文件位置
-      entry: path.resolve(__dirname, '../src/page/index.ts'), // 这个页面的ts文件入口
+      template: path.resolve(__dirname, '../src/page/index/index.html'), // 这个页面的html文件位置
+      entry: path.resolve(__dirname, '../src/page/index/index.ts'), // 这个页面的ts文件入口
       hash: true,
       minify,
       chunks: ['index'],

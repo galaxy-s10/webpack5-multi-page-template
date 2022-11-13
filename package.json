@@ -1,9 +1,9 @@
 {
-  "name": "webpack-multi-page-template",
+  "name": "webpack5-multi-page-template",
   "version": "0.0.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/galaxy-s10/webpack-multi-page-template"
+    "url": "https://github.com/galaxy-s10/webpack5-multi-page-template"
   },
   "license": "MIT",
   "author": "shuisheng <2274751790@qq.com>",
@@ -25,12 +25,7 @@
     }
   },
   "dependencies": {
-    "ant-design-vue": "1.1.0",
-    "antd": "2.13.14",
-    "babel-plugin-import": "^1.13.5",
-    "billd-ui": "^1.2.8",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "@vue/preload-webpack-plugin": "^2.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.14.0",

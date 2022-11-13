@@ -1,0 +1,22 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+#home {
+  color: skyblue;
+  height: 100vh;
+  .ignore-1 {
+    width: 100px;
+  }
+  .fire-ico {
+    @include global.setBackground('../../assets/img/fire-ico.png');
+    // @include setBackground('/public/img/fire-ico.png');
+    width: 100px;
+    height: 100px;
+  }
+  .foot-btn {
+    // position: fixed;
+    // bottom: 100px;
+    border: 1px solid;
+  }
+}

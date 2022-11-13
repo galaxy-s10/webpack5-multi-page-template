@@ -167,7 +167,7 @@ const commonConfig = (isProduction) => {
           },
           parser: {
             dataUrlCondition: {
-              maxSize: 4 * 1024, // 如果一个模块源码大小小于 maxSize，那么模块会被作为一个 Base64 编码的字符串注入到包中， 否则模块文件会被生成到输出的目标目录中
+              maxSize: 2 * 1024, // 如果一个模块源码大小小于 maxSize，那么模块会被作为一个 Base64 编码的字符串注入到包中， 否则模块文件会被生成到输出的目标目录中
             },
           },
         },
@@ -232,12 +232,6 @@ const commonConfig = (isProduction) => {
         'process.env': {
           NODE_ENV: JSON.stringify(isProduction ? 'production' : 'development'),
           PUBLIC_PATH: JSON.stringify(outputStaticUrl(isProduction)),
-          VUE_APP_RELEASE_PROJECT_NAME: JSON.stringify(
-            process.env.VUE_APP_RELEASE_PROJECT_NAME
-          ),
-          VUE_APP_RELEASE_PROJECT_ENV: JSON.stringify(
-            process.env.VUE_APP_RELEASE_PROJECT_ENV
-          ),
         },
       }),
       // 多页面配置

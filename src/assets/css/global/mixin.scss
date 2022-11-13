@@ -34,7 +34,6 @@
     left: 0;
     width: inherit;
     height: inherit;
-    border-width: 0 0 1px 1px;
     border-style: solid;
     border-color: inherit;
     background-color: inherit;
@@ -58,12 +57,13 @@
 }
 
 // 箭头
-@mixin arrow($position, $size: 10px) {
+@mixin arrow($position, $size: 10px, $border: 1px) {
   width: $size;
   height: $size;
 
   @extend %arrowMixin;
   &::after {
+    border-width: 0 0 $border $border;
     @if $position == 'left' {
       transform: rotate(45deg);
     }
