@@ -17,6 +17,7 @@
     "prepare": "husky install",
     "prettier": "prettier --write .",
     "release": "standard-version",
+    "release:first": "standard-version --first-release",
     "start": "cross-env webpack serve --config ./script/config/webpack.common.ts --env development"
   },
   "config": {
