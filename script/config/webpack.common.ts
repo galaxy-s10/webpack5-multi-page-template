@@ -153,7 +153,7 @@ const commonConfig = (isProduction) => {
               options: {
                 sourceMap: false,
                 // 根据sass-loader9.x以后使用additionalData，9.x以前使用prependData
-                additionalData: `@use '~@/assets/css/global/global.scss';`,
+                // additionalData: `@use '~@/assets/css/global/global.scss';`,
               },
             },
           ].filter(Boolean),

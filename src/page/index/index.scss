@@ -9,8 +9,10 @@ body {
     width: 100px;
   }
   .fire-ico {
-    @include global.setBackground('../../assets/img/fire-ico.png');
-    // @include setBackground('/public/img/fire-ico.png');
+    background-image: url('../../assets/img/fire-ico.png');
+    background-position: center center;
+    background-size: contain;
+    background-repeat: no-repeat;
     width: 100px;
     height: 100px;
   }
